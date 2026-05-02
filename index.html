@@ -190,13 +190,57 @@ h2 {
   gap: 20px;
 }
 
-.heart {
-  margin: 0;
-  color: var(--rose-dark);
-  font-family: "Courier New", ui-monospace, monospace;
-  font-size: clamp(1.1rem, 3.4vw, 2.1rem);
-  font-weight: 900;
-  line-height: 1.04;
+.heartEmbed {
+  position: relative;
+  width: min(74vw, 360px);
+  height: clamp(120px, 24vw, 190px);
+  display: grid;
+  place-items: center;
+  filter: drop-shadow(0 18px 34px rgba(169, 47, 104, 0.2));
+}
+
+.heartEmbed span {
+  position: absolute;
+  color: #ff76b7;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.1rem, 8vw, 5.6rem);
+  line-height: 1;
+  text-shadow:
+    0 2px 0 rgba(255, 255, 255, 0.78),
+    0 0 20px rgba(255, 118, 183, 0.28);
+}
+
+.heartEmbed span:nth-child(1) {
+  font-size: clamp(4.6rem, 16vw, 9.4rem);
+  color: #ff5da8;
+}
+
+.heartEmbed span:nth-child(2) {
+  left: 8%;
+  top: 28%;
+  color: #ffc0dc;
+  transform: rotate(-16deg);
+}
+
+.heartEmbed span:nth-child(3) {
+  right: 10%;
+  top: 18%;
+  color: #f28dc5;
+  transform: rotate(14deg);
+}
+
+.heartEmbed span:nth-child(4) {
+  left: 24%;
+  bottom: 0;
+  color: #f5d9ff;
+  transform: rotate(12deg);
+}
+
+.heartEmbed span:nth-child(5) {
+  right: 27%;
+  bottom: 5%;
+  color: #ff9dcc;
+  transform: rotate(-10deg);
 }
 
 .prizeButton {
@@ -224,22 +268,73 @@ h2 {
 }
 
 .prize {
+  position: relative;
   display: grid;
   place-items: center;
   gap: 8px;
+  padding: 10px 18px;
 }
 
 .prize.is-celebrating {
   animation: prizeGlow 1.4s ease-out both;
 }
 
-.tiara {
-  margin: 4px 0 0;
-  color: var(--rose-dark);
-  font-family: "Courier New", ui-monospace, monospace;
-  font-size: clamp(1rem, 3vw, 1.9rem);
-  font-weight: 900;
-  line-height: 1.02;
+.crownEmbed {
+  position: relative;
+  width: min(64vw, 260px);
+  height: 132px;
+  margin-top: 2px;
+  filter: drop-shadow(0 16px 26px rgba(169, 47, 104, 0.18));
+}
+
+.crownEmbed::before {
+  content: "";
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  bottom: 18px;
+  height: 48px;
+  border: 3px solid rgba(255, 255, 255, 0.9);
+  border-radius: 0 0 28px 28px;
+  background: linear-gradient(135deg, #ff85bf, #ffd1e5 54%, #f3dcff);
+  box-shadow: inset 0 0 0 2px rgba(169, 47, 104, 0.14);
+}
+
+.crownEmbed::after {
+  content: "";
+  position: absolute;
+  left: 17%;
+  right: 17%;
+  bottom: 62px;
+  height: 70px;
+  background:
+    conic-gradient(from 142deg at 13% 100%, transparent 0 36deg, #ff88bf 37deg 80deg, transparent 81deg),
+    conic-gradient(from 142deg at 50% 100%, transparent 0 36deg, #ff5da8 37deg 80deg, transparent 81deg),
+    conic-gradient(from 142deg at 87% 100%, transparent 0 36deg, #ffb8d8 37deg 80deg, transparent 81deg);
+}
+
+.crownEmbed span {
+  position: absolute;
+  bottom: 48px;
+  width: 20px;
+  aspect-ratio: 1;
+  border: 3px solid rgba(255, 255, 255, 0.92);
+  border-radius: 999px;
+  background: #fff5fa;
+  box-shadow: 0 0 18px rgba(255, 118, 183, 0.34);
+}
+
+.crownEmbed span:nth-child(1) {
+  left: 16%;
+}
+
+.crownEmbed span:nth-child(2) {
+  left: calc(50% - 10px);
+  bottom: 82px;
+}
+
+.crownEmbed span:nth-child(3) {
+  right: 16%;
 }
 
 .prize p {
@@ -249,9 +344,43 @@ h2 {
   font-weight: 900;
 }
 
-.prize.is-celebrating .tiara,
+.prize.is-celebrating .crownEmbed,
 .prize.is-celebrating p {
   animation: prizePop 680ms cubic-bezier(0.18, 0.9, 0.24, 1) both;
+}
+
+.prizeConfetti {
+  position: absolute;
+  inset: -64px -96px;
+  pointer-events: none;
+}
+
+.prizeConfetti span {
+  position: absolute;
+  left: var(--cx);
+  top: var(--cy);
+  width: 12px;
+  height: 18px;
+  border-radius: 3px;
+  background: var(--rose);
+  box-shadow: 0 0 18px rgba(229, 95, 155, 0.22);
+  transform: rotate(var(--tilt));
+  animation: prizeConfettiFloat 1.9s ease-in-out infinite alternate;
+}
+
+.prizeConfetti span:nth-child(3n) {
+  background: var(--blush);
+}
+
+.prizeConfetti span:nth-child(3n + 1) {
+  background: var(--lavender);
+}
+
+.prizeConfetti span:nth-child(even) {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  animation-delay: 260ms;
 }
 
 .confettiBurst {
@@ -348,6 +477,12 @@ h2 {
   }
 }
 
+@keyframes prizeConfettiFloat {
+  100% {
+    transform: translateY(-12px) rotate(calc(var(--tilt) + 42deg));
+  }
+}
+
 .hidden {
   display: none;
 }
@@ -413,28 +548,37 @@ h2 {
       </section>
 
       <section class="result hidden" id="result">
-        <pre class="heart" aria-label="ASCII heart">
-  **     **
- ****   ****
-*************
- ***********
-  *********
-   *******
-    *****
-     ***
-      *
-        </pre>
+        <div class="heartEmbed" aria-label="pink heart decoration">
+          <span>♥</span>
+          <span>♡</span>
+          <span>♥</span>
+          <span>♡</span>
+          <span>♥</span>
+        </div>
         <h2>i'm glad you know!</h2>
         <button class="prizeButton" id="prizeButton" type="button">click here for ur prize</button>
         <div class="prize hidden" id="prize">
-          <pre class="tiara" aria-label="ASCII tiara">
-   /\     /\     /\
-  /  \   /  \   /  \
- /    \ /    \ /    \
- \     V      V     /
-  \_____________/
-   \___________/
-          </pre>
+          <div class="prizeConfetti" aria-hidden="true">
+            <span style="--cx: 8%; --cy: 16%; --tilt: 18deg;"></span>
+            <span style="--cx: 22%; --cy: 4%; --tilt: -26deg;"></span>
+            <span style="--cx: 36%; --cy: 14%; --tilt: 38deg;"></span>
+            <span style="--cx: 52%; --cy: 2%; --tilt: -18deg;"></span>
+            <span style="--cx: 68%; --cy: 15%; --tilt: 30deg;"></span>
+            <span style="--cx: 84%; --cy: 7%; --tilt: -34deg;"></span>
+            <span style="--cx: 94%; --cy: 28%; --tilt: 20deg;"></span>
+            <span style="--cx: 2%; --cy: 40%; --tilt: -18deg;"></span>
+            <span style="--cx: 15%; --cy: 68%; --tilt: 28deg;"></span>
+            <span style="--cx: 30%; --cy: 82%; --tilt: -36deg;"></span>
+            <span style="--cx: 48%; --cy: 72%; --tilt: 14deg;"></span>
+            <span style="--cx: 64%; --cy: 88%; --tilt: -22deg;"></span>
+            <span style="--cx: 80%; --cy: 76%; --tilt: 32deg;"></span>
+            <span style="--cx: 96%; --cy: 58%; --tilt: -28deg;"></span>
+          </div>
+          <div class="crownEmbed" aria-label="pink princess crown">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
           <p>my princess</p>
         </div>
       </section>
