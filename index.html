@@ -644,6 +644,7 @@ const state = {
   runawaySide: null,
   chaseTimers: [],
   prizeTimer: null,
+  fakeRoundChoice: null,
 };
 
 const game = document.querySelector("#game");
@@ -681,6 +682,10 @@ const fakeRoundCount = 1;
 const totalRounds = fakeRoundCount + herImages.length;
 
 function pickAnimal(round) {
+  if (round === 0 && state.fakeRoundChoice) {
+    return state.fakeRoundChoice;
+  }
+
   return animalImages[round % animalImages.length];
 }
 
@@ -824,6 +829,8 @@ function handleChoice(event) {
   const choice = event.currentTarget;
 
   if (choice.dataset.role === "fake") {
+    const selectedIndex = choice.dataset.side === "left" ? 0 : 1;
+    state.fakeRoundChoice = fakeRoundImages[selectedIndex];
     hint.textContent = "nice choice";
     clearChaseTimers();
     state.round += 1;
