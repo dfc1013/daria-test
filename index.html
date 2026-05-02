@@ -187,6 +187,7 @@ h2 {
   display: grid;
   place-items: center;
   text-align: center;
+  gap: 20px;
 }
 
 .heart {
@@ -196,6 +197,52 @@ h2 {
   font-size: clamp(1.1rem, 3.4vw, 2.1rem);
   font-weight: 900;
   line-height: 1.04;
+}
+
+.prizeButton {
+  margin-top: 10px;
+  padding: 14px 20px;
+  border: 1px solid rgba(215, 47, 114, 0.32);
+  border-radius: 8px;
+  color: #8f2457;
+  background: rgba(255, 246, 251, 0.92);
+  box-shadow: 0 18px 52px rgba(150, 68, 113, 0.16);
+  cursor: pointer;
+  font-weight: 850;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.prizeButton:hover,
+.prizeButton:focus-visible {
+  transform: translateY(-2px);
+  border-color: rgba(215, 47, 114, 0.54);
+  box-shadow: 0 24px 62px rgba(150, 68, 113, 0.22);
+  outline: none;
+}
+
+.prize {
+  display: grid;
+  place-items: center;
+  gap: 8px;
+}
+
+.tiara {
+  margin: 4px 0 0;
+  color: var(--rose-dark);
+  font-family: "Courier New", ui-monospace, monospace;
+  font-size: clamp(1rem, 3vw, 1.9rem);
+  font-weight: 900;
+  line-height: 1.02;
+}
+
+.prize p {
+  margin: 0;
+  color: #8f2457;
+  font-size: clamp(1.6rem, 5vw, 3.4rem);
+  font-weight: 900;
 }
 
 .hidden {
@@ -275,6 +322,18 @@ h2 {
       *
         </pre>
         <h2>i'm glad you know!</h2>
+        <button class="prizeButton" id="prizeButton" type="button">click here for ur prize</button>
+        <div class="prize hidden" id="prize">
+          <pre class="tiara" aria-label="ASCII tiara">
+   /\     /\     /\
+  /  \   /  \   /  \
+ /    \ /    \ /    \
+ \     V      V     /
+  \_____________/
+   \___________/
+          </pre>
+          <p>my princess</p>
+        </div>
       </section>
     </main>
     <script>
@@ -306,6 +365,22 @@ const leftImage = document.querySelector("#leftImage");
 const rightImage = document.querySelector("#rightImage");
 const leftLabel = document.querySelector("#leftLabel");
 const rightLabel = document.querySelector("#rightLabel");
+const prizeButton = document.querySelector("#prizeButton");
+const prize = document.querySelector("#prize");
+
+const chaseMessagesByRound = [
+  [
+    { after: 0, text: "Nice try. That option is unavailable for legal reasons." },
+    { after: 1100, text: "are u sure?" },
+    { after: 2600, text: "did germany run out of mirrors?" },
+    { after: 4100, text: "uh..this was the easy one" },
+  ],
+  [
+    { after: 0, text: "gently, no. look at daria again." },
+    { after: 1100, text: "this is still a very solvable question." },
+    { after: 2600, text: "ur so close to getting it right." },
+  ],
+];
 
 function pickAnimal(round) {
   return animalImages[round % animalImages.length];
@@ -374,12 +449,7 @@ function startChaseMessages() {
     return;
   }
 
-  const chaseMessages = [
-    { after: 0, text: "Nice try. That option is unavailable for legal reasons." },
-    { after: 1100, text: "are u sure?" },
-    { after: 2600, text: "did germany run out of mirrors?" },
-    { after: 4100, text: "uh..this was the easy one" },
-  ];
+  const chaseMessages = chaseMessagesByRound[state.round] ?? chaseMessagesByRound[0];
 
   chaseMessages.forEach((message) => {
     const timer = window.setTimeout(() => {
@@ -463,6 +533,11 @@ function handleChoice(event) {
       moveRunaway(choice);
     }
   }, { passive: false });
+});
+
+prizeButton.addEventListener("click", () => {
+  prizeButton.classList.add("hidden");
+  prize.classList.remove("hidden");
 });
 
 renderRound();
