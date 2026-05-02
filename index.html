@@ -255,20 +255,59 @@ h2 {
 
 .confettiBurst span {
   position: absolute;
-  left: var(--x);
-  top: -18px;
-  width: 9px;
-  height: 15px;
+  width: 12px;
+  height: 18px;
   border-radius: 2px;
-  opacity: 0.92;
+  opacity: 0;
   transform: translate3d(0, 0, 0) rotate(0deg);
+}
+
+.confettiBurst .confettiFall {
+  left: var(--x);
+  top: -22px;
   animation: confettiFall var(--duration) cubic-bezier(0.22, 0.72, 0.35, 1) var(--delay) forwards;
 }
 
+.confettiBurst .confettiPop {
+  left: 50%;
+  top: 48%;
+  width: 14px;
+  height: 22px;
+  animation: confettiPop 1.65s cubic-bezier(0.18, 0.9, 0.24, 1) var(--delay) forwards;
+}
+
 @keyframes confettiFall {
+  0% {
+    opacity: 0.96;
+  }
+
+  78% {
+    opacity: 0.96;
+  }
+
   100% {
     opacity: 0;
     transform: translate3d(var(--drift), var(--fall), 0) rotate(var(--spin));
+  }
+}
+
+@keyframes confettiPop {
+  0% {
+    opacity: 0;
+    transform: translate3d(-50%, -50%, 0) scale(0.72) rotate(0deg);
+  }
+
+  12% {
+    opacity: 1;
+  }
+
+  88% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate3d(calc(-50% + var(--pop-x)), calc(-50% + var(--pop-y)), 0) scale(1.1) rotate(var(--spin));
   }
 }
 
@@ -557,20 +596,23 @@ function launchConfetti() {
   burst.className = "confettiBurst";
   burst.setAttribute("aria-hidden", "true");
 
-  for (let index = 0; index < 54; index += 1) {
+  for (let index = 0; index < 90; index += 1) {
     const piece = document.createElement("span");
+    piece.className = index < 42 ? "confettiPop" : "confettiFall";
     piece.style.setProperty("--x", `${Math.random() * 100}vw`);
     piece.style.setProperty("--fall", `${72 + Math.random() * 34}vh`);
     piece.style.setProperty("--drift", `${Math.random() * 160 - 80}px`);
     piece.style.setProperty("--spin", `${Math.random() * 540 + 180}deg`);
-    piece.style.setProperty("--delay", `${Math.random() * 0.28}s`);
-    piece.style.setProperty("--duration", `${1.65 + Math.random() * 0.75}s`);
+    piece.style.setProperty("--pop-x", `${Math.random() * 520 - 260}px`);
+    piece.style.setProperty("--pop-y", `${Math.random() * 360 - 250}px`);
+    piece.style.setProperty("--delay", `${Math.random() * 0.38}s`);
+    piece.style.setProperty("--duration", `${2.6 + Math.random() * 1.2}s`);
     piece.style.background = colors[index % colors.length];
     burst.appendChild(piece);
   }
 
   document.body.appendChild(burst);
-  window.setTimeout(() => burst.remove(), 2900);
+  window.setTimeout(() => burst.remove(), 4300);
 }
 
 [leftChoice, rightChoice].forEach((choice) => {
