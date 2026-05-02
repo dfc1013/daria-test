@@ -245,6 +245,33 @@ h2 {
   font-weight: 900;
 }
 
+.confettiBurst {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.confettiBurst span {
+  position: absolute;
+  left: var(--x);
+  top: -18px;
+  width: 9px;
+  height: 15px;
+  border-radius: 2px;
+  opacity: 0.92;
+  transform: translate3d(0, 0, 0) rotate(0deg);
+  animation: confettiFall var(--duration) cubic-bezier(0.22, 0.72, 0.35, 1) var(--delay) forwards;
+}
+
+@keyframes confettiFall {
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--drift), var(--fall), 0) rotate(var(--spin));
+  }
+}
+
 .hidden {
   display: none;
 }
@@ -376,7 +403,7 @@ const chaseMessagesByRound = [
     { after: 4100, text: "uh..this was the easy one" },
   ],
   [
-    { after: 0, text: "gently, no. look at daria again." },
+    { after: 0, text: "sigh, here we go again" },
     { after: 1100, text: "this is still a very solvable question." },
     { after: 2600, text: "ur so close to getting it right." },
   ],
@@ -520,6 +547,32 @@ function handleChoice(event) {
   window.setTimeout(renderRound, 650);
 }
 
+function launchConfetti() {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    return;
+  }
+
+  const colors = ["#e55f9b", "#f7b8d3", "#a92f68", "#efe6ff", "#ffd7e8"];
+  const burst = document.createElement("div");
+  burst.className = "confettiBurst";
+  burst.setAttribute("aria-hidden", "true");
+
+  for (let index = 0; index < 54; index += 1) {
+    const piece = document.createElement("span");
+    piece.style.setProperty("--x", `${Math.random() * 100}vw`);
+    piece.style.setProperty("--fall", `${72 + Math.random() * 34}vh`);
+    piece.style.setProperty("--drift", `${Math.random() * 160 - 80}px`);
+    piece.style.setProperty("--spin", `${Math.random() * 540 + 180}deg`);
+    piece.style.setProperty("--delay", `${Math.random() * 0.28}s`);
+    piece.style.setProperty("--duration", `${1.65 + Math.random() * 0.75}s`);
+    piece.style.background = colors[index % colors.length];
+    burst.appendChild(piece);
+  }
+
+  document.body.appendChild(burst);
+  window.setTimeout(() => burst.remove(), 2900);
+}
+
 [leftChoice, rightChoice].forEach((choice) => {
   choice.addEventListener("click", handleChoice);
   choice.addEventListener("pointerenter", () => {
@@ -538,6 +591,7 @@ function handleChoice(event) {
 prizeButton.addEventListener("click", () => {
   prizeButton.classList.add("hidden");
   prize.classList.remove("hidden");
+  launchConfetti();
 });
 
 renderRound();
